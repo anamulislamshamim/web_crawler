@@ -8,3 +8,4 @@ rich # optional for nicer logging
 cssselect
 lxml
 APScheduler
+slowapi

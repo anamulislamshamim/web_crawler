@@ -3,7 +3,7 @@ from typing import Dict, Any, List, Optional
 import httpx
 from lxml import html
 from .models import Book
-from ..database.storage import MongoStorage
+from database.storage import MongoStorage
 from .utils import retry_async, parse_price
 
 

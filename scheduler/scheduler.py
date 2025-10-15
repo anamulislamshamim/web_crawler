@@ -4,11 +4,12 @@ import json
 import logging
 from datetime import datetime, timedelta, timezone
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from apscheduler.triggers.cron import CronTrigger, IntervalTrigger
-from ..crawler.scraper import AsyncBookCrawler
-from ..database.storage import MongoStorage
+from apscheduler.triggers.cron import CronTrigger
+from apscheduler.triggers.interval import IntervalTrigger
+from crawler.scraper import AsyncBookCrawler
+from database.storage import MongoStorage
 from crawler.config import SITE_CONFIG
-from ..settings import (
+from settings import (
     SITE_KEY,
     SCHEDULER_TIMEZONE,
     SCHEDULER_RUN_TIME,
@@ -76,7 +77,7 @@ class BookChangeDetector:
                     'timestamp': new_book['crawl_timestamp']
                 }
                 await self.mongo.insert_one_book_change(new_book_changes)
-                logging.info(f"Book Updated: {new_book["name"]} | Changes: {changes}")
+                logging.info(f"Book Updated: {new_book['name']} | Changes: {changes}")
                 return 'updated'
         
         return 'unchanged'
@@ -106,7 +107,7 @@ class DailyScheduler:
             print(f"[cyan]✅ Scheduler configured to run every {SCHEDULER_INTERVAL_MINUTES} minutes[/cyan]")
 
         # Add the job
-        scheduler.add_job(self.run_daily_task, trigger, args=[SITE_KEY])
+        scheduler.add_job(self.run_daily_task, trigger, args=[])
         scheduler.start()
         print("[yellow]🕒 Scheduler started successfully![/yellow]")
         return scheduler 

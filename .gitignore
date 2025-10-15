@@ -3,3 +3,4 @@ venv
 .denv 
 .venv
 .env
+test.py
