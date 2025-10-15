@@ -1,0 +1,5 @@
+denv
+venv
+.denv 
+.venv
+.env

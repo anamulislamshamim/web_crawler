@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+httpx
+motor
+pydantic
+python-dotenv # optional for config
+rich # optional for nicer logging
+cssselect
+lxml
+APScheduler
