@@ -3,7 +3,7 @@ from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from database.db_config import mongo
 from scheduler.scheduler import DailyScheduler
-from app.routers import crawler_router, books_router
+from app.routers import crawler_router, books_router, changes_router
 from crawler.crawler_registry import get_all_crawlers
 from core.auth import get_api_key_header
 
@@ -48,3 +48,4 @@ async def hello():
 # include routers with dependency on API key
 app.include_router(crawler_router.router, prefix="/crawler", dependencies=[Depends(get_api_key_header)]) # type: ignore
 app.include_router(books_router.router, prefix="", dependencies=[Depends(get_api_key_header)]) # type: ignore
+app.include_router(changes_router.router, prefix="", dependencies=[Depends(get_api_key_header)]) # type: ignore
