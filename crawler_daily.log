@@ -5133,3 +5133,14 @@
 2025-10-16 21:09:25,858 - INFO - HTTP Request: POST http://test/crawler/start/books_toscrape "HTTP/1.1 200 OK"
 2025-10-16 21:09:25,875 - INFO - HTTP Request: POST http://test/crawler/stop/books_toscrape "HTTP/1.1 200 OK"
 2025-10-16 21:09:25,906 - INFO - HTTP Request: POST http://test/crawler/resume/books_toscrape "HTTP/1.1 200 OK"
+2025-10-16 21:19:27,863 - INFO - HTTP Request: GET http://test/books "HTTP/1.1 200 OK"
+2025-10-16 21:19:27,878 - INFO - HTTP Request: GET http://test/books?category=Poetry "HTTP/1.1 200 OK"
+2025-10-16 21:19:27,890 - INFO - HTTP Request: GET http://test/books/68f0c1232a4f50cf3bdfb702 "HTTP/1.1 200 OK"
+2025-10-16 21:19:27,904 - INFO - HTTP Request: GET http://test/changes/report?format=json "HTTP/1.1 200 OK"
+2025-10-16 21:19:27,918 - INFO - HTTP Request: GET http://test/changes/report?format=csv "HTTP/1.1 200 OK"
+2025-10-16 21:19:27,977 - INFO - HTTP Request: POST http://test/crawler/start/books_toscrape "HTTP/1.1 200 OK"
+2025-10-16 21:19:27,988 - INFO - HTTP Request: POST http://test/crawler/stop/books_toscrape "HTTP/1.1 200 OK"
+2025-10-16 21:19:28,012 - INFO - HTTP Request: POST http://test/crawler/resume/books_toscrape "HTTP/1.1 200 OK"
+2025-10-16 21:20:53,105 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-16 21:20:53,614 - INFO - Added job "DailyScheduler.run_daily_task" to job store "default"
+2025-10-16 21:20:53,614 - INFO - Scheduler started
