@@ -1,5 +1,3 @@
-Here’s a polished, well-structured `README.md` based on the details you provided:
-
 ````markdown
 # Async Book Crawler API
 
