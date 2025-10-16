@@ -8,6 +8,8 @@ import json
 import io 
 import csv
 from datetime import datetime, timedelta, timezone
+from core.deps import get_mongo
+from database.storage import MongoStorage
 
 
 router = APIRouter()
@@ -28,6 +30,7 @@ def serialize_doc(doc):
 
 @router.get('/books', response_model=BookListResponse)
 async def list_books(request: Request, 
+    mongo: MongoStorage = Depends(get_mongo),
     category: Optional[str] = Query(None),
     min_price: Optional[float] = Query(None),
     max_price: Optional[float] = Query(None),
@@ -37,7 +40,6 @@ async def list_books(request: Request,
     per_page: int = Query(20, ge=1, le=100)
 ):
     """List books with filters, sorting, and pagination."""
-    mongo = request.app.state.mongo
     query = {}
     if category:
         query['category'] = {'$regex': f'^{category}$', '$options': 'i'}
@@ -103,7 +105,7 @@ async def list_books(request: Request,
     return BookListResponse(total=total, page=page, per_page=per_page, total_pages=total_pages, items=items)
 
 @router.get('/books/{book_id}')
-async def get_book(bookd_id: str, request: Request):
+async def get_book(bookd_id: str, request: Request, mongo: MongoStorage = Depends(get_mongo)):
     '''Return full details about a single book by object id.'''
     mongo = request.app.state.mongo
     try:
@@ -130,7 +132,7 @@ async def get_book(bookd_id: str, request: Request):
     return serialize_doc(doc)
 
 @router.get("/changes/report")
-async def daily_report(request: Request, format: str = 'json'):
+async def daily_report(request: Request, format: str = 'json', mongo: MongoStorage = Depends(get_mongo)):
     """Generate a daily change report (JSON or csv)"""
     mongo = request.app.state.mongo
     today = datetime.now(timezone.utc).date()
@@ -152,4 +154,7 @@ async def daily_report(request: Request, format: str = 'json'):
     for c in changes:
         c['_id'] = str(c['_id'])
     
-    return changes
+    if changes:
+        return changes
+    
+    return {"status": "no changes detected yet!"}

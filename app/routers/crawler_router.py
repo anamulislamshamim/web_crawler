@@ -9,14 +9,14 @@ import json
 # from database.storage import MongoStorage
 from crawler.crawler_registry import get_crawler, add_crawler, remove_crawler
 import asyncio
-from database.db_config import mongo
-from datetime import datetime, timezone, timedelta
+from core.deps import get_mongo
+from database.storage import MongoStorage
 
 
 router = APIRouter()
 
 @router.post("/start/{site_key}")
-async def start_crawl(site_key: str, background_tasks: BackgroundTasks):
+async def start_crawl(site_key: str, background_tasks: BackgroundTasks, mongo: MongoStorage = Depends(get_mongo)):
     if site_key not in SITE_CONFIG:
         return {"error": "Unknown site_key"}
     
@@ -32,7 +32,7 @@ async def start_crawl(site_key: str, background_tasks: BackgroundTasks):
     return {"status": "started", "site_key": site_key}
 
 @router.post("/resume/{site_key}")
-async def resume_crawl(site_key: str):
+async def resume_crawl(site_key: str, mongo: MongoStorage = Depends(get_mongo)):
     if site_key not in SITE_CONFIG:
         return {"error": "Unknown site_key"}
     if get_crawler(site_key):
@@ -57,7 +57,7 @@ async def stop_crawl(site_key: str):
     return {"status": "stopped", "site_key": site_key}
 
 @router.get("/status/{site_key}")
-async def status(site_key: str):
+async def status(site_key: str, mongo: MongoStorage = Depends(get_mongo)):
     state = await mongo.get_state(site_key)
     if state:
         state['_id'] = str(state['_id'])
