@@ -105,11 +105,11 @@ async def list_books(request: Request,
     return BookListResponse(total=total, page=page, per_page=per_page, total_pages=total_pages, items=items)
 
 @router.get('/books/{book_id}')
-async def get_book(bookd_id: str, request: Request, mongo: MongoStorage = Depends(get_mongo)):
+async def get_book(book_id: str, request: Request, mongo: MongoStorage = Depends(get_mongo)):
     '''Return full details about a single book by object id.'''
     mongo = request.app.state.mongo
     try:
-        oid = ObjectId(bookd_id)
+        oid = ObjectId(book_id)
     except Exception:
         raise HTTPException(status_code=400, detail='invalid book id')
     

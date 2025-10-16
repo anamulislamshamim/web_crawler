@@ -5035,3 +5035,23 @@
 2025-10-16 17:33:20,512 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
 2025-10-16 17:33:20,513 - INFO - Added job "DailyScheduler.run_daily_task" to job store "default"
 2025-10-16 17:33:20,513 - INFO - Scheduler started
+2025-10-16 17:33:26,402 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-16 17:33:26,404 - INFO - Added job "DailyScheduler.run_daily_task" to job store "default"
+2025-10-16 17:33:26,404 - INFO - Scheduler started
+2025-10-16 18:22:00,660 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-16 18:22:00,661 - INFO - Added job "DailyScheduler.run_daily_task" to job store "default"
+2025-10-16 18:22:00,661 - INFO - Scheduler started
+2025-10-16 18:23:35,680 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-16 18:23:35,681 - INFO - Added job "DailyScheduler.run_daily_task" to job store "default"
+2025-10-16 18:23:35,681 - INFO - Scheduler started
+2025-10-16 18:24:09,983 - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2025-10-16 18:24:09,984 - INFO - Added job "DailyScheduler.run_daily_task" to job store "default"
+2025-10-16 18:24:09,984 - INFO - Scheduler started
+2025-10-16 19:03:57,080 - INFO - HTTP Request: GET http://test/books "HTTP/1.1 403 Forbidden"
+2025-10-16 19:03:57,312 - INFO - HTTP Request: GET http://test/books?category=Poetry "HTTP/1.1 403 Forbidden"
+2025-10-16 19:03:57,328 - INFO - HTTP Request: GET http://test/books/68f0c1232a4f50cf3bdfb702 "HTTP/1.1 403 Forbidden"
+2025-10-16 19:07:17,970 - INFO - HTTP Request: GET http://test/books/68f0c1232a4f50cf3bdfb702 "HTTP/1.1 422 Unprocessable Entity"
+2025-10-16 19:30:36,840 - INFO - HTTP Request: GET http://test/books/68f0c1232a4f50cf3bdfb702 "HTTP/1.1 200 OK"
+2025-10-16 19:36:52,899 - INFO - HTTP Request: GET http://test/books "HTTP/1.1 200 OK"
+2025-10-16 19:36:52,925 - INFO - HTTP Request: GET http://test/books?category=Poetry "HTTP/1.1 200 OK"
+2025-10-16 19:36:52,941 - INFO - HTTP Request: GET http://test/books/68f0c1232a4f50cf3bdfb702 "HTTP/1.1 200 OK"
