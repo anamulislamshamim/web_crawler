@@ -5,6 +5,17 @@ Supports **daily scheduling**, **API key-based authentication**, **rate limiting
 
 ---
 
+## Author
+
+**Shamim**  
+Remote Backend Engineer (Mid)  
+Short Circuit Science, London, UK  
+[LinkedIn Profile](https://www.linkedin.com/in/anamul-islam-shamim/)
+
+---
+
+---
+
 ## Table of Contents
 
 - [Features](#features)  
@@ -33,8 +44,8 @@ Supports **daily scheduling**, **API key-based authentication**, **rate limiting
 
 1. **Clone the repository**
 ```bash
-git clone <repo_url>
-cd <repo_name>
+git clone https://github.com/anamulislamshamim/web_crawler.git
+cd web_crawler
 ````
 
 2. **Create a Python virtual environment**
