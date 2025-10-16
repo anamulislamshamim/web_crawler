@@ -15,3 +15,6 @@ SITE_KEY = os.getenv("SITE_KEY", "books_toscrape")
 SCHEDULER_TIMEZONE = os.getenv("SCHEDULER_TIMEZONE", "UTC")
 SCHEDULER_RUN_TIME = os.getenv("SCHEDULER_RUN_TIME", "")  # e.g., "02:00"
 SCHEDULER_INTERVAL_MINUTES = int(os.getenv("SCHEDULER_INTERVAL_MINUTES", 1440))
+
+# API key name
+API_KEY_NAME = os.getenv("API_KEY_NAME", "")
