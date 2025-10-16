@@ -24,7 +24,6 @@ class BookListResponse(BaseModel):
 def serialize_doc(doc):
     doc['id'] = str(doc.get('_id'))
     doc.pop('_id', None)
-    
     return doc 
 
 @router.get('/books', response_model=BookListResponse)
@@ -46,9 +45,9 @@ async def list_books(request: Request,
     # Price range filters on price_including_tax.amount
     if min_price is not None or max_price is not None:
         price_q = {}
-        if not min_price:
+        if min_price is not None:
             price_q["$gte"] = min_price
-        if not max_price:
+        if max_price is not None:
             price_q["$lte"] = max_price
         query['price_including_tax.amount'] = price_q
     
@@ -83,7 +82,18 @@ async def list_books(request: Request,
     total = await mongo.books.count_documents(query)
     total_pages = math.ceil(total / per_page) if total else 0
     
-    cursor = mongo.books.find(query)
+    # 1 means include it, 0 means exclude it
+    PROJECTION_FIELDS = {
+        '_id': 1,
+        'name': 1,
+        'rating': 1,
+        'category': 1,
+        'number_of_reviews': 1,
+        'availability': 1,
+        'price_including_tax.amount': 1,
+    }
+    
+    cursor = mongo.books.find(query, PROJECTION_FIELDS)
     if sort:
         cursor.sort(sort)
     cursor = cursor.skip((page - 1) * per_page).limit(per_page)
@@ -101,12 +111,25 @@ async def get_book(bookd_id: str, request: Request):
     except Exception:
         raise HTTPException(status_code=400, detail='invalid book id')
     
-    doc = await mongo.books.find_one({'_id': oid})
+    PROJECTION_FIELDS = {
+        "_id": 1,
+        "availability": 1,
+        "category": 1,
+        "description": 1,
+        "image_url": 1,
+        "name": 1,
+        "number_of_reviews": 1,
+        "price_excluding_tax": 1,
+        "price_including_tax": 1,
+        "rating": 1
+    }
+    
+    doc = await mongo.books.find_one({'_id': oid}, PROJECTION_FIELDS)
     if not doc:
         raise HTTPException(status_code=404, detail='book not found')
     return serialize_doc(doc)
 
-@router.get("/report/daily")
+@router.get("/changes/report")
 async def daily_report(request: Request, format: str = 'json'):
     """Generate a daily change report (JSON or csv)"""
     mongo = request.app.state.mongo
