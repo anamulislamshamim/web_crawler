@@ -48,4 +48,4 @@ async def hello():
 # include routers with dependency on API key
 app.include_router(crawler_router.router, prefix="/crawler", dependencies=[Depends(get_api_key_header)]) # type: ignore
 app.include_router(books_router.router, prefix="", dependencies=[Depends(get_api_key_header)]) # type: ignore
-app.include_router(changes_router.router, prefix="", dependencies=[Depends(get_api_key_header)]) # type: ignore
+app.include_router(changes_router.router, prefix="/changes", dependencies=[Depends(get_api_key_header)]) # type: ignore

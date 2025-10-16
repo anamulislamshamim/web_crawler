@@ -63,7 +63,7 @@ class MockMongoStorage:
     def __init__(self):
         db = mongomock.MongoClient().db
         self.books = AsyncMockCollection(db.books)
-        self.book_change_logs = AsyncMockCollection(db.book_change_logs)
+        self.book_changes = AsyncMockCollection(db.book_change_logs)
 
     async def insert_book(self, book_data):
         return await self.books.insert_one(book_data)
@@ -98,68 +98,3 @@ async def test_app(mock_mongo):
         yield client
 
     app.dependency_overrides = {}
-
-
-
-# class AsyncMockCollection:
-#     """Async-compatible wrapper for mongomock collections."""
-#     def __init__(self, collection):
-#         self._collection = collection
-
-#     async def insert_one(self, doc):
-#         return self._collection.insert_one(doc)
-
-#     async def find_one(self, query, projection=None):
-#         return self._collection.find_one(query, projection)
-
-#     async def find(self, query=None, projection=None):
-#         query = query or {}
-#         return list(self._collection.find(query, projection))
-
-#     async def count_documents(self, query):
-#         return self._collection.count_documents(query)
-
-
-# class MockMongoStorage:
-#     """Async-compatible Mock MongoDB Storage with in-memory data."""
-#     def __init__(self):
-#         db = mongomock.MongoClient().db
-#         self.books = AsyncMockCollection(db.books)
-#         self.book_change_logs = AsyncMockCollection(db.book_change_logs)
-
-#     # Optional helpers for test data insertion
-#     async def insert_book(self, book_data):
-#         return await self.books.insert_one(book_data)
-
-#     async def find_books(self, query=None):
-#         return await self.books.find(query)
-
-#     async def find_one_book(self, book_id):
-#         return await self.books.find_one({"_id": book_id})
-
-
-# @pytest.fixture(scope="session")
-# def anyio_backend():
-#     """Tell pytest to use asyncio event loop."""
-#     return "asyncio"
-
-
-# @pytest.fixture
-# async def mock_mongo():
-#     """Fixture that provides an in-memory MongoDB mock."""
-#     return MockMongoStorage()
-
-
-# @pytest.fixture
-# async def test_app(mock_mongo):
-#     """Attach mock DB to FastAPI app and return async test client."""
-#     # Override dependency injection
-#     app.dependency_overrides[deps.get_mongo] = lambda: mock_mongo
-#     app.state.mongo = mock_mongo  # ✅ Attach directly to app state
-
-#     # Use in-memory ASGITransport for fast tests (no network)
-#     transport = ASGITransport(app=app)
-#     async with AsyncClient(transport=transport, base_url="http://test") as client:
-#         yield client
-
-#     app.dependency_overrides = {}

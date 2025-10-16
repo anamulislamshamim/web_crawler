@@ -139,15 +139,15 @@ async def daily_report(request: Request, format: str = 'json', mongo: MongoStora
     start = datetime.combine(today, datetime.min.time())
     end = datetime.combine(today + timedelta(days=1), datetime.min.time())
     
-    cursor = mongo.db.book_changes.find({'timestamps': {'$gte': start, '$lt': end}})
+    cursor = mongo.book_changes.find({'timestamps': {'$gte': start, '$lt': end}})
     changes = await cursor.to_list(length=None)
     
     if format == 'csv':
         output = io.StringIO()
         writer = csv.writer(output)
-        writer.writerow(['source_url', 'change_type', 'changes', 'timestamp'])
+        writer.writerow(['source_url', 'change_type', 'changes', 'timestamps'])
         for c in changes:
-            writer.writerow([c['source_url'], c['change_type'], json.dumps(c['changes']), c['timestamp']])
+            writer.writerow([c['source_url'], c['change_type'], json.dumps(c['changes']), c['timestamps']])
         return Response(content=output.getvalue(), media_type='text/csv') 
 
     # default JSON

@@ -15,7 +15,7 @@ from database.storage import MongoStorage
 router = APIRouter()
 
 
-@router.get("/changes/report")
+@router.get("/report")
 async def daily_report(request: Request, format: str = 'json', mongo: MongoStorage = Depends(get_mongo)):
     """Generate a daily change report (JSON or csv)"""
     mongo = request.app.state.mongo
@@ -23,7 +23,7 @@ async def daily_report(request: Request, format: str = 'json', mongo: MongoStora
     start = datetime.combine(today, datetime.min.time())
     end = datetime.combine(today + timedelta(days=1), datetime.min.time())
     
-    cursor = mongo.db.book_changes.find({'timestamps': {'$gte': start, '$lt': end}})
+    cursor = mongo.book_changes.find({'timestamps': {'$gte': start, '$lt': end}})
     changes = await cursor.to_list(length=None)
     
     if format == 'csv':
