@@ -29,14 +29,44 @@ Short Circuit Science, London, UK
 
 ## Features
 
-- Async crawling using `httpx` and async concurrency  
-- MongoDB integration (NoSQL storage) with raw HTML snapshots  
-- Daily scheduler to detect new books and changes  
-- Change log and daily change reports (JSON/CSV)  
-- API endpoints for books, changes, and crawler control  
-- API key-based authentication & in-memory rate limiting  
-- Modular routers for `/crawler` and `/books`  
-- OpenAPI/Swagger documentation available via FastAPI  
+This project is a **production-ready content aggregation system** designed to crawl, monitor, and serve book data from a sample e-commerce website.  
+
+### 1. Scalable and Robust Web Crawler
+- Crawl **all book-related information** and store it in MongoDB.
+- Collected data includes:
+  - Name, description, and category of the book  
+  - Prices (including and excluding taxes)  
+  - Availability status  
+  - Number of reviews  
+  - Book cover image URL  
+  - Rating  
+- Store metadata for each book: **crawl timestamp, status, source URL, raw HTML snapshot**.  
+- **Async programming** with `httpx` ensures fast and efficient crawling.  
+- **Retry logic** and **resumable crawls** handle transient failures.  
+- MongoDB schema optimized for **efficient querying and deduplication**.  
+- Book data modeled using **Pydantic schemas** for validation and consistency.  
+
+### 2. Scheduler and Change Detection
+- **Daily scheduler** detects newly added books and inserts them into the database.  
+- **Change detection** compares stored book data with the website to update changes (e.g., price or availability).  
+- Maintains a **change log** in MongoDB for tracking all updates.  
+- Option to **generate daily change reports** in JSON or CSV format.  
+- Optimized detection using **content hashing or fingerprinting**.  
+- Logging and alerting system for significant changes or new books.  
+- Scheduler supports **APScheduler**, **Celery + Beat**, or **cron via Docker**.  
+
+### 3. RESTful API
+- Modular FastAPI routers for `/books` and `/crawler`.  
+- Endpoints with **filtering, pagination, and sorting** for book data.  
+- **API key-based authentication** for secure access.  
+- **Rate limiting** to prevent abuse.  
+- OpenAPI/Swagger documentation for easy API exploration.  
+
+### 4. Production-Ready Architecture
+- Modular codebase for **scalability and maintainability**.  
+- Proper configuration via `.env` files.  
+- Full **test coverage** for crawlers, APIs, and database operations.  
+- Logging for monitoring crawler performance and system health.  
 
 ---
 
