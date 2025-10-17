@@ -190,3 +190,15 @@ x-api-key: web_crawler_9a0d2e8f27d6a4b2f3a1c9eb4d7a2f15
 ```bash
 pytest -v
 ```
+---
+
+## 🚀 Further Improvement Proposals  
+
+- Implement **distributed rate limiting** using Redis for scalability.  
+- Containerize the application with **Docker** and add CI/CD pipelines.  
+- Enhance **logging, monitoring, and alerting** with tools like Grafana or ELK Stack.  
+- Use **Celery workers** for distributed and parallel crawling.  
+- Strengthen **security and configuration management** using secrets vaults.  
+- Add **analytics and reporting dashboards** for crawl and change insights.  
+
+---
