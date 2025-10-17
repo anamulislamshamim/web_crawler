@@ -56,7 +56,7 @@ This project is a **production-ready content aggregation system** designed to cr
 - Scheduler supports **APScheduler**, **Celery + Beat**, or **cron via Docker**.  
 
 ### 3. RESTful API
-- Modular FastAPI routers for `/books` and `/crawler`.  
+- Modular FastAPI routers for `/books`, `/changes` and `/crawler`.  
 - Endpoints with **filtering, pagination, and sorting** for book data.  
 - **API key-based authentication** for secure access.  
 - **Rate limiting** to prevent abuse.  
@@ -183,4 +183,10 @@ GET /changes/report                # View recent updates or change logs
 
 ```http
 x-api-key: web_crawler_9a0d2e8f27d6a4b2f3a1c9eb4d7a2f15
+```
+
+---
+## Testing
+```bash
+pytest -v
 ```
