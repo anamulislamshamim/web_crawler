@@ -192,7 +192,7 @@ pytest -v
 ```
 ---
 
-## 🚀 Further Improvement Proposals  
+## Further Improvement Proposals  
 
 - Implement **distributed rate limiting** using Redis for scalability.  
 - Containerize the application with **Docker** and add CI/CD pipelines.  
@@ -202,3 +202,8 @@ pytest -v
 - Add **analytics and reporting dashboards** for crawl and change insights.  
 
 ---
+
+## 🙏 Thank You  
+
+Thank you for taking the time to review my assignment.  
+I truly appreciate the opportunity to demonstrate my skills and approach to designing scalable, production-ready Python applications.
