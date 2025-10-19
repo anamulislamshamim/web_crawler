@@ -47,8 +47,6 @@ class BookChangeDetector:
         old_fp = existing_book.get('fingerprint')
         if old_fp and new_fp and old_fp != new_fp:
             #Book updated
-            print("Debug: Old_FP: ", old_fp[:20], " new_fp: ", new_fp[:20])
-            
             changes = {}
             
             for key in ["name", 'price_including_tax', 'price_excluding_tax', 'availability', 'rating']:
@@ -69,5 +67,4 @@ class BookChangeDetector:
             logging.info(f"Book Updated: {new_book['name']} | Changes: {changes}")
             return 'updated'
         
-        print("Debug: new_fp: ", new_fp)
         return 'unchanged'
