@@ -16,29 +16,47 @@ router = APIRouter()
 
 
 @router.get("/report")
-async def daily_report(request: Request, format: str = 'json', mongo: MongoStorage = Depends(get_mongo)):
-    """Generate a daily change report (JSON or csv)"""
+async def daily_report_generate(
+    request: Request,
+    format: str = "json",
+    mongo: MongoStorage = Depends(get_mongo)
+):
+    """
+    Generate a daily change report (JSON or CSV) based on today's timestamp.
+    """
     mongo = request.app.state.mongo
-    today = datetime.now(timezone.utc).date()
-    start = datetime.combine(today, datetime.min.time())
-    end = datetime.combine(today + timedelta(days=1), datetime.min.time())
     
-    cursor = mongo.book_changes.find({'timestamps': {'$gte': start, '$lt': end}})
+    # Current UTC time
+    now = datetime.now(timezone.utc)
+    # 24 hours ago
+    start = now - timedelta(hours=24)
+    # Query MongoDB for documents within last 24 hour
+    cursor = mongo.book_changes.find({
+        "timestamp": {"$gte": start, "$lte": now}
+    })
+
     changes = await cursor.to_list(length=None)
-    
-    if format == 'csv':
+    # CSV format
+    if format.lower() == "csv":
         output = io.StringIO()
         writer = csv.writer(output)
-        writer.writerow(['source_url', 'change_type', 'changes', 'timestamp'])
+        writer.writerow(["source_url", "change_type", "changes", "timestamp"])
         for c in changes:
-            writer.writerow([c['source_url'], c['change_type'], json.dumps(c['changes']), c['timestamp']])
-        return Response(content=output.getvalue(), media_type='text/csv') 
+            writer.writerow([
+                c.get("source_url", ""),
+                c.get("change_type", ""),
+                json.dumps(c.get("changes", {}), ensure_ascii=False),
+                c.get("timestamp").isoformat() if "timestamp" in c else ""
+            ])
+        return Response(content=output.getvalue(), media_type="text/csv")
 
-    # default JSON
+    # Default JSON format
     for c in changes:
-        c['_id'] = str(c['_id'])
-    
+        c["_id"] = str(c["_id"])
+        if "timestamp" in c and isinstance(c["timestamp"], datetime):
+            c["timestamp"] = c["timestamp"].isoformat()
+
     if changes:
         return changes
-    
-    return {"status": "no changes detected yet!"}
+
+    return {"status": "No change!"}

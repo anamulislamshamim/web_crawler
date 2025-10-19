@@ -18,12 +18,7 @@ class MongoStorage:
     
     async def insert_one_book_change(self, book_doc: Dict[str, Any]):
         """Insert Book changes into this table"""
-        await self.book_changes.insert_one({
-            'source_url': book_doc['source_url'],
-            'change_type': 'new',
-            'changes': book_doc,
-            'timestamp': datetime.now(timezone.utc)
-        })
+        await self.book_changes.insert_one(book_doc)
         
     async def ensure_indexes(self):
         # unique on source_url to deduplicate
@@ -35,8 +30,8 @@ class MongoStorage:
         res = await self.books.update_one({"source_url": book_doc["source_url"]}, {"$set": book_doc}, upsert=True)
         return res
     
-    async def get_one_book(self, book_doc: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-        return await self.books.find_one({"source_url": book_doc["source_url"]})
+    async def get_one_book(self, mongo_document: dict) -> Optional[Dict[str, Any]]:
+        return await self.books.find_one({"source_url": mongo_document["source_url"]})
         
     async def save_raw_html(self, source_url: str, html: str):
         await self.books.update_one({"source_url": source_url}, {"$set": html}, upsert=True)

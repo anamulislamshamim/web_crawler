@@ -53,7 +53,7 @@ This project is a **production-ready content aggregation system** designed to cr
 - Option to **generate daily change reports** in JSON or CSV format.  
 - Optimized detection using **content hashing or fingerprinting**.  
 - Logging and alerting system for significant changes or new books.  
-- Scheduler supports **APScheduler**, **Celery + Beat**, or **cron via Docker**.  
+- Scheduler supports **APScheduler**.  
 
 ### 3. RESTful API
 - Modular FastAPI routers for `/books`, `/changes` and `/crawler`.  

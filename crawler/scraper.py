@@ -5,6 +5,7 @@ from lxml import html
 from .models import Book
 from database.storage import MongoStorage
 from .utils import retry_async, parse_price
+from utils.change_detection import BookChangeDetector
 
 
 class AsyncBookCrawler:
@@ -15,6 +16,7 @@ class AsyncBookCrawler:
         self.sem = asyncio.Semaphore(concurrency) # It's a crucial tool for limiting concurrency in asynchronous programming.
         self.client = httpx.AsyncClient(timeout=20)
         self._stop = False
+        self.detector = BookChangeDetector(mongo)
         
     async def close(self):
         await self.client.aclose()
@@ -134,12 +136,13 @@ class AsyncBookCrawler:
                 image_url=image_url,
                 rating=rating,
                 source_url=url,
-                raw_html=text,
                 status="fetched"
             )   
             # serialize book object
             mongo_document = book.model_dump(mode='json')
-            await self.mongo.upsert_book(mongo_document)
+            # before update detect change
+            await self.detector.detect_and_update_changes(mongo_document)
+            # await self.mongo.upsert_book(mongo_document)
         except Exception as e:
             # Save failed state for this URL
             await self.mongo.upsert_book({
@@ -152,4 +155,3 @@ class AsyncBookCrawler:
     
     def stop(self):
         self._stop = True
-    

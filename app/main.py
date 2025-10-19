@@ -7,32 +7,42 @@ from app.routers import crawler_router, books_router, changes_router
 from crawler.crawler_registry import get_all_crawlers
 from core.auth import get_api_key_header
 
-
-# Shared objects - in real app prefer startup/shutdown events
-scheduler = DailyScheduler(mongo)
+# ---------- Lifespan for startup/shutdown ----------
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # ----------Start up------------
-    # Now mongo will be globally available resource within Fastapi router endpoint
-    # we can access it like mongo = request.app.state.mongo within any endpoint
+    """
+    FastAPI lifespan context: startup and shutdown events.
+    - Ensure Mongo indexes.
+    - Initialize scheduler after Mongo is ready.
+    - Clean up scheduler and crawlers on shutdown.
+    """
+    # ---------- Startup ----------
     app.state.mongo = mongo
     await mongo.ensure_indexes()
-    scheduler.start_schedule_job()
-    
-    # The 'yield' pauses the function until the application shuts down
-    yield
-    
-    # ----------Shut Down-----------
+
+    # Initialize scheduler AFTER Mongo is ready
+    app.state.scheduler = DailyScheduler(app.state.mongo)
+    # start scheduled jobs automatically
+    app.state.scheduler.start_schedule_job()
+
+    yield  # Pause here until shutdown
+
+    # ---------- Shutdown ----------
+    # Close Mongo connection
     await mongo.close()
-    for c in get_all_crawlers():
+
+    # Close crawlers safely
+    for crawler in get_all_crawlers():
         try:
-            await c.close()
-        except:
+            await crawler.close()
+        except Exception:
             pass
 
+
+# ---------- Create FastAPI app ----------
 app = FastAPI(title="Async Book Crawler", lifespan=lifespan)
 
-# CORS (adjust origins as needed)
+# ---------- CORS Middleware ----------
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -41,11 +51,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# ---------- Health Check ----------
 @app.get("/health")
-async def hello():
-    return {"status": "Server is running..."}
+async def health():
+    return {"status": "Hay Shamim! Server is running..."}
 
-# include routers with dependency on API key
-app.include_router(crawler_router.router, prefix="/crawler", dependencies=[Depends(get_api_key_header)]) # type: ignore
-app.include_router(books_router.router, prefix="", dependencies=[Depends(get_api_key_header)]) # type: ignore
-app.include_router(changes_router.router, prefix="/changes", dependencies=[Depends(get_api_key_header)]) # type: ignore
+
+# ---------- Include Routers ----------
+app.include_router(crawler_router.router, prefix="/crawler", dependencies=[Depends(get_api_key_header)])
+app.include_router(books_router.router, prefix="", dependencies=[Depends(get_api_key_header)])
+app.include_router(changes_router.router, prefix="/changes", dependencies=[Depends(get_api_key_header)])

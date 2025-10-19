@@ -130,31 +130,3 @@ async def get_book(book_id: str, request: Request, mongo: MongoStorage = Depends
     if not doc:
         raise HTTPException(status_code=404, detail='book not found')
     return serialize_doc(doc)
-
-@router.get("/changes/report")
-async def daily_report(request: Request, format: str = 'json', mongo: MongoStorage = Depends(get_mongo)):
-    """Generate a daily change report (JSON or csv)"""
-    mongo = request.app.state.mongo
-    today = datetime.now(timezone.utc).date()
-    start = datetime.combine(today, datetime.min.time())
-    end = datetime.combine(today + timedelta(days=1), datetime.min.time())
-    
-    cursor = mongo.book_changes.find({'timestamps': {'$gte': start, '$lt': end}})
-    changes = await cursor.to_list(length=None)
-    
-    if format == 'csv':
-        output = io.StringIO()
-        writer = csv.writer(output)
-        writer.writerow(['source_url', 'change_type', 'changes', 'timestamps'])
-        for c in changes:
-            writer.writerow([c['source_url'], c['change_type'], json.dumps(c['changes']), c['timestamps']])
-        return Response(content=output.getvalue(), media_type='text/csv') 
-
-    # default JSON
-    for c in changes:
-        c['_id'] = str(c['_id'])
-    
-    if changes:
-        return changes
-    
-    return {"status": "no changes detected yet!"}

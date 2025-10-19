@@ -24,9 +24,8 @@ class Book(BaseModel):
     image_url: Optional[HttpUrl]
     rating: Optional[str]
     source_url: HttpUrl
-    raw_html: str
     crawl_timestamp: datetime = Field(default_factory=get_current_time_utc)
-    status: str = Field(default="new") # new, fetched, failed
+    status: str = Field(default="new"), # new, fetched, failed
     
     class Config:
         json_schema_extra = {
