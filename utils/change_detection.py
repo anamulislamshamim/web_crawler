@@ -35,6 +35,7 @@ class BookChangeDetector:
             # New book detected
             new_book['fingerprint'] = new_fp
             new_book['status'] = 'new'
+            new_book['crawl_timestamp'] = datetime.now(timezone.utc)
             await self.mongo.upsert_book(new_book)
             await self.mongo.insert_one_book_change({
                     'source_url': new_book['source_url'],

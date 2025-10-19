@@ -31,11 +31,10 @@ async def daily_report_generate(
     # 24 hours ago
     start = now - timedelta(hours=24)
     # Query MongoDB for documents within last 24 hour
-    cursor = mongo.book_changes.find({
-        "timestamp": {"$gte": start, "$lte": now}
-    })
+    cursor = mongo.book_changes.find({})
 
     changes = await cursor.to_list(length=None)
+    print("Debug:", len(changes), " start_time:", start)
     # CSV format
     if format.lower() == "csv":
         output = io.StringIO()
